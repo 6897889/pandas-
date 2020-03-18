@@ -1,0 +1,26 @@
+python + pandas爬取网页表格数据
+这里以工标网标准数据为例  http://www.csres.com/notice/50655.html 
+
+
+
+ 先请求页面，xpath定位表格区域
+
+res = requests.get('http://www.csres.com/notice/50655.html')
+res_elements = etree.HTML(res.text)
+table = res_elements.xpath('//table[@id="table1"]')
+table = etree.tostring(table[0], encoding='utf-8').decode()
+调用pandas的read_html方法解析表格数据
+
+df = pd.read_html(table, encoding='utf-8', header=0)[0]
+results = list(df.T.to_dict().values())  # 转换成列表嵌套字典的格式
+ 转存为csv文件
+
+df.to_csv("std.csv", index=False)
+最后结果如图
+
+
+
+ 代码依赖环境 requests pandas lxml
+————————————————
+版权声明：本文为CSDN博主「QC__」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/zhang862520682/article/details/86701078
