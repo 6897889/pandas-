@@ -13,6 +13,22 @@ table = etree.tostring(table[0], encoding='utf-8').decode()
 
 df = pd.read_html(table, encoding='utf-8', header=0)[0]
 results = list(df.T.to_dict().values())  # 转换成列表嵌套字典的格式
+
+results可直接写入数据库mondb
+
+import pymongo
+    from pymongo import MongoClient
+
+    # 1.链接本地数据库服务
+    name = MongoClient('localhost')
+    # 2.链接本地数据库 demo 没有会创建
+    db = name.demo  # demo数据库名
+    # 3.创建，连接集合
+    emp = db.test05  # employees集合名
+
+    # emp.insert_one(sj) 插入一行数据
+    emp.insert_many(results)     #插入多行数据
+
  转存为csv文件
 
 df.to_csv("std.csv", index=False)
@@ -21,6 +37,5 @@ df.to_csv("std.csv", index=False)
 
 
  代码依赖环境 requests pandas lxml
-————————————————
-版权声明：本文为CSDN博主「QC__」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+
 原文链接：https://blog.csdn.net/zhang862520682/article/details/86701078
